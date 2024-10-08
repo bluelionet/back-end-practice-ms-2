@@ -7,8 +7,16 @@ app.use(express.json());
 /*
  * Mock database.
  */
-const accounts = []; // Account shape is { id, name, balance }.
-const transferLogs = []; // Transfer log shapge is { id, fromAccountId, toAccountId, amount, timestamp }.
+let accounts = []; // Account shape is { id, name, balance }.
+let transferLogs = []; // Transfer log shapge is { id, fromAccountId, toAccountId, amount, timestamp }.
+
+function setAccounts(newAccounts) { // For testing.
+  accounts = [...newAccounts];
+}
+
+function setTransferLogs(newTransferLogs) { // For testing.
+  transferLogs = [...newTransferLogs];
+}
 
 /*
  * Create account API.
@@ -34,7 +42,6 @@ app.post('/api/create_account', (req, res) => {
   };
   accounts.push(newAccount);
   res.send({ success: true, result: newAccount });
-  console.log('accounts =', accounts);
 });
 
 /*
@@ -63,7 +70,6 @@ app.post('/api/deposit', (req, res) => {
   // Deposit money and respond.
   account.balance += amount;
   res.send({ success: true, result: account });
-  console.log('accounts =', accounts);
 });
 
 /*
@@ -98,7 +104,6 @@ app.post('/api/withdraw', (req, res) => {
   // Withdraw money and respond.
   account.balance -= amount;
   res.send({ success: true, result: account });
-  console.log('accounts =', accounts);
 });
 
 /*
@@ -148,10 +153,15 @@ app.post('/api/transfer', (req, res) => {
   };
   transferLogs.push(newTransferLog);
   res.send({ success: true, result: newTransferLog });
-  console.log('accounts =', accounts);
-  console.log('transferLogs =', transferLogs);
 });
 
 app.listen(3000, () => {
   console.log('Listening on port 3000...');
 });
+
+// For testing.
+module.exports = {
+  app,
+  setAccounts,
+  setTransferLogs,
+};
